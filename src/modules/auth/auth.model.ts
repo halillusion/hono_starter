@@ -1,47 +1,41 @@
 import { PrismaClient } from '@prisma/client';
-/* cryptojs */
 import crypto from 'crypto';
+import dayjs from 'dayjs';
 
 let prisma = new PrismaClient();
 
-const UserModel = {
+const UsersModel = {
   async findUserByEmail(email: string) {
-    return prisma.user.findUnique({ where: { email } });
+    return prisma.users.findUnique({ where: { email } });
   },
   async createUser(data: any) {
     data.password = crypto.createHash('sha256').update(data.password).digest('hex').toString();
-    return prisma.user.create({ data });
+    data.created_at = dayjs().unix().toString();
+    data.updated_at = null;
+    return prisma.users.create({ data });
   },
   async updateUser(id: number, data: any) {
-    return prisma.user.update({ where: { id }, data });
+    data.updated_at = dayjs().unix().toString();
+    return prisma.users.update({ where: { id }, data });
   },
   async deleteUser(id: number) {
-    return prisma.user.delete({ where: { id } });
+    let data: any = {};
+    data.status = 'deleted';
+    data.updated_at = dayjs().unix().toString();
+    return prisma.users.update({ where: { id }, data });
   },
 };
 
-const RefreshTokenModel = {
-  async findTokenByUserId(userId: number) {
-    return prisma.refresh_token.findFirst({ where: { userId } });
-  },
-  async createToken(data: any) {
-    return prisma.refresh_token.create({ data });
-  },
-  async deleteToken(id: number) {
-    return prisma.refresh_token.delete({ where: { id } });
-  },
-};
-
-const SessionModel = {
-  async findSessionByToken(token: string) {
-    return prisma.session.findFirst({ where: { token } });
+const SessionsModel = {
+  async findSessionByUserId(userId: number) {
+    return prisma.sessions.findFirst({ where: { user_id: userId.toString() } });
   },
   async createSession(data: any) {
-    return prisma.session.create({ data });
+    return prisma.sessions.create({ data });
   },
   async deleteSession(id: number) {
-    return prisma.session.delete({ where: { id } });
+    return prisma.sessions.delete({ where: { id } });
   },
 };
 
-export { UserModel, RefreshTokenModel, SessionModel };
+export { UsersModel, SessionsModel };
