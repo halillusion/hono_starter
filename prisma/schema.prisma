@@ -7,18 +7,29 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model user {
-  id       Int     @id @default(autoincrement())
-  email    String  @unique
-  name     String?
-  password String?
+enum userStatus {
+  active
+  passive
+  deleted
 }
 
-model refresh_token {
-  id         Int      @id @default(autoincrement())
+model users {
+  id         Int        @id @default(autoincrement())
+  email      String     @unique
+  name       String?
+  password   String?
+  status     userStatus @default(active)
+  created_at String
+  updated_at String?
+}
+
+model sessions {
+  id         Int     @id @default(autoincrement())
   user_id    String
-  token      String   @unique
-  expires_at DateTime
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  token      String  @unique
+  ip_address String? @db.VarChar(180)
+  user_agent String? @db.VarChar(255)
+  expires_at String
+  created_at String
+  updated_at String?
 }
