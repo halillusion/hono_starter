@@ -1,0 +1,22 @@
+{
+  "scripts": {
+    "dev": "tsx watch src/app.ts",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:generate": "prisma generate",
+    "prisma:reset": "prisma migrate reset --force"
+  },
+  "dependencies": {
+    "@hono/node-server": "^1.11.0",
+    "@hono/sentry": "^1.0.1",
+    "@prisma/client": "^5.13.0",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.5",
+    "hono": "^4.2.7",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "@types/uuid": "^9.0.8",
+    "tsx": "^4.7.1"
+  }
+}
